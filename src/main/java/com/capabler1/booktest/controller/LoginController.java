@@ -33,28 +33,14 @@ public class LoginController {
     public Result login(@RequestBody User requestUser, HttpSession session) {
         String username = requestUser.getUsername();
 //        username = HtmlUtils.htmlEscape(username);
-
-        Subject subject = SecurityUtils.getSubject();
-//        subject.getSession().setTimeout(10000);
-        UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(username, requestUser.getPassword());
-
         User user = userService.get(username, requestUser.getPassword());
-        try {
-            subject.login(usernamePasswordToken);
-            return ResultFactory.buildSuccessResult(username);
-        } catch (AuthenticationException e) {
-            String message = "账号密码错误";
-            return ResultFactory.buildFailResult(message);
-        }
 
-
-
-//        if (null == user) {
-//            return new Result(400);
-//        } else {
-//            session.setAttribute("user", user);
-//            return new Result(200);
-//        }
+       if (null == user) {
+           return new Result(400);
+       } else {
+           session.setAttribute("user", user);
+           return new Result(200);
+       }
     }
     @PostMapping("api/register")
     @ResponseBody
